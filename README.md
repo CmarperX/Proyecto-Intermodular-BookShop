@@ -1,2 +1,2 @@
-# Proyecto-Intermodular-
-Proyecto Intermodular basado en un sistema de compras y reservas de una librería
+# Intermodular Project-
+Intermodular project based on a bookstore purchase and reservation system
