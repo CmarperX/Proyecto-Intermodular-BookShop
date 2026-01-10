@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-01-2026 a las 17:41:32
+-- Tiempo de generación: 10-01-2026 a las 15:11:29
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -60,7 +60,7 @@ CREATE TABLE `libros` (
 
 CREATE TABLE `notificaciones` (
   `codigo` int(11) NOT NULL,
-  `codUsuario` int(11) NOT NULL,
+  `codUsuario` varchar(9) DEFAULT NULL,
   `mensaje` text NOT NULL,
   `fecha_creacion` datetime DEFAULT current_timestamp(),
   `leida` enum('leida','no leida') DEFAULT 'no leida'
@@ -88,7 +88,7 @@ CREATE TABLE `ordenadores` (
 
 CREATE TABLE `reservas` (
   `codigo` int(11) NOT NULL,
-  `codUsuario` int(11) NOT NULL,
+  `codUsuario` varchar(9) DEFAULT NULL,
   `fecha` date NOT NULL,
   `horaInicio` time NOT NULL,
   `horaFin` time NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE `salas` (
 --
 
 CREATE TABLE `usuarios` (
-  `dni` int(9) NOT NULL,
+  `dni` varchar(9) NOT NULL,
   `nombre` varchar(30) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `direccion` varchar(50) NOT NULL,
@@ -151,7 +151,7 @@ ALTER TABLE `libros`
 --
 ALTER TABLE `notificaciones`
   ADD PRIMARY KEY (`codigo`),
-  ADD KEY `codUsuario` (`codUsuario`);
+  ADD KEY `notificaciones_ibfk_1` (`codUsuario`);
 
 --
 -- Indices de la tabla `ordenadores`
@@ -165,8 +165,8 @@ ALTER TABLE `ordenadores`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`codigo`),
-  ADD KEY `fk_reserva_usuario` (`codUsuario`),
-  ADD KEY `fk_reserva_sala` (`codRecurso`);
+  ADD KEY `fk_reserva_sala` (`codRecurso`),
+  ADD KEY `fk_reserva_usuario` (`codUsuario`);
 
 --
 -- Indices de la tabla `salas`
@@ -234,16 +234,13 @@ ALTER TABLE `libros`
 -- Filtros para la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
-  ADD CONSTRAINT `notificaciones_ibfk_1` FOREIGN KEY (`codUsuario`) REFERENCES `usuarios` (`dni`);
+  ADD CONSTRAINT `notificaciones_ibfk_1` FOREIGN KEY (`codUsuario`) REFERENCES `usuarios` (`dni`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  ADD CONSTRAINT `fk_reserva_libro` FOREIGN KEY (`codRecurso`) REFERENCES `libros` (`codigo`),
-  ADD CONSTRAINT `fk_reserva_ordenador` FOREIGN KEY (`codRecurso`) REFERENCES `ordenadores` (`codigo`),
-  ADD CONSTRAINT `fk_reserva_sala` FOREIGN KEY (`codRecurso`) REFERENCES `salas` (`codigo`),
-  ADD CONSTRAINT `fk_reserva_usuario` FOREIGN KEY (`codUsuario`) REFERENCES `usuarios` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_reserva_usuario` FOREIGN KEY (`codUsuario`) REFERENCES `usuarios` (`dni`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
