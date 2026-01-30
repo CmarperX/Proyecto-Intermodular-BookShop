@@ -1,0 +1,17 @@
+#calendario td {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#calendario td.disabled {
+    background: #eee;
+    color: #999;
+    cursor: not-allowed;
+}
+
+#calendario td.seleccionado {
+    background: #0d6efd;
+    color: white;
+    font-weight: bold;
+}

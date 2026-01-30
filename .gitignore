@@ -1,0 +1,21 @@
+# Configuración sensible
+/includes/config.local.php
+/includes/config.production.php
+
+# Uploads
+/uploads/*
+!/uploads/.gitkeep
+
+# Cache / logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Vendor
+/vendor/
