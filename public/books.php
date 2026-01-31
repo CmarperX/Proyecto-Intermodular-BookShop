@@ -29,7 +29,7 @@ if ($categoria !== '') {
 
 } else {
 
-    $totalBooks = $bookModel->count($search);
+    $totalBooks = (int)$bookModel->count($search);
     $totalPages = ceil($totalBooks / $limit);
 
     $books = $bookModel->getAll(
@@ -71,11 +71,7 @@ if ($categoria !== '') {
             <!-- Search -->
             <div class="col-md-6 input-group mb-4 mt-2">
                 <input
-                    type="text"
-                    name="search"
-                    class="form-control"
-                    placeholder="Buscar por título, autor o ISBN"
-                    value="<?= htmlspecialchars($search) ?>">
+                    type="text" name="search" class="form-control" placeholder="Buscar por título, autor o ISBN" value="<?= htmlspecialchars($search) ?>">
                     
                 <div class="col-md-2">
                     <button class="btn btn-primary w-100">
@@ -110,6 +106,7 @@ if ($categoria !== '') {
 
                         <p><?= htmlspecialchars($b['descripcion']) ?></p>
 
+                        <!-- book availability -->
                         <?php if ($b['stock'] > 0): ?>
                             <a href="user/create_reservation.php?id=<?= $b['codigo'] ?>"
                                class="btn btn-primary btn-sm">
@@ -144,5 +141,6 @@ if ($categoria !== '') {
     </div>
     <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>

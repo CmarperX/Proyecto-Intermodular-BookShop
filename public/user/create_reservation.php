@@ -137,5 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- JS -->
     <script src="../assets/js/calendar/calendar.js"></script>
     <script src="../assets/js/calendar/selection.js"></script>
+    <script src="../assets/js/calendar/form_validation.js"></script>
 </body>
 </html>

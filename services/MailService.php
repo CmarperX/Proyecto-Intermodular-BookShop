@@ -13,33 +13,35 @@ class MailService {
         string $libro,
         string $fechaInicio,
         string $fechaFin
-    ) {
+    ): bool {
 
         $mail = new PHPMailer(true);
 
         try {
-            // Configuración SMTP (ejemplo Gmail)
+            // SMTP config
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'tucorreo@gmail.com';
-            $mail->Password = 'CLAVE_DE_APP';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Host       = SMTP_HOST;
+            $mail->SMTPAuth   = true;
+            $mail->Username   = SMTP_USER;
+            $mail->Password   = SMTP_PASS;
+            $mail->Port       = SMTP_PORT;
+            $mail->SMTPSecure = SMTP_SECURE === 'tls'
+                ? PHPMailer::ENCRYPTION_STARTTLS
+                : PHPMailer::ENCRYPTION_SMTPS;
 
-            // Remitente y destinatario
-            $mail->setFrom('noreply@savianexus.com', 'Savia Nexus');
+            // Sender & recipient
+            $mail->setFrom(SMTP_USER, 'Savia Nexus');
             $mail->addAddress($email, $nombre);
 
-            // Contenido
+            // Email content
             $mail->isHTML(true);
             $mail->Subject = 'Confirmación de reserva';
             $mail->Body = "
                 <h3>Reserva confirmada</h3>
-                <p><strong>Libro:</strong> $libro</p>
-                <p><strong>Recogida:</strong> $fechaInicio</p>
-                <p><strong>Devolución:</strong> $fechaFin</p>
-                <p>Gracias por usar Savia Nexus</p>
+                <p><strong>Libro:</strong> {$libro}</p>
+                <p><strong>Recogida:</strong> {$fechaInicio}</p>
+                <p><strong>Devolución:</strong> {$fechaFin}</p>
+                <p>Gracias por confiar en <strong>Savia Nexus</strong></p>
             ";
 
             return $mail->send();

@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Registrarse
         </a>
         <div class="form-check text-center my-3">
-            <a href="forget-password.php" style="text-decoration: none; color:var(--primary-color)">
+            <a href="forget_password.php" style="text-decoration: none; color:var(--primary-color)">
             ¿Has olvidado tu contraseña?
             </a>
         </div>

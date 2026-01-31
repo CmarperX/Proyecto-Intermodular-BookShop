@@ -81,7 +81,7 @@ if (!Auth::hasAnyRole(['admin', 'empleado'])) {
                 </a>
             </div>
 
-             <!-- Reservations management -->
+            <!-- Reservations management -->
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="reserves_admin.php" class="text-decoration-none">
                     <div class="card h-100 shadow-sm text-center dashboard-card">
@@ -89,6 +89,23 @@ if (!Auth::hasAnyRole(['admin', 'empleado'])) {
                             <h5 class="card-title">
                                 &#128197; 
                                 Reservas
+                            </h5>
+                            <p class="card-text">
+                                Gestiona las reservas del sistema
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Statistics -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="statistics.php" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm text-center dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                &#128200; 
+                                Informe estadístico
                             </h5>
                             <p class="card-text">
                                 Gestiona las reservas del sistema

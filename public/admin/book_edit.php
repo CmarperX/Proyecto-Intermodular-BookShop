@@ -11,6 +11,9 @@ if (!Auth::isLoggedIn() || !Auth::hasAnyRole(['admin', 'empleado'])) {
 // Model instantiation
 $bookModel = new Book($pdo);
 
+// Obtain categories
+$categorias = $bookModel->getCategories();
+
 // Obtain ID
 $codigo = (int)($_GET['id'] ?? 0);
 
@@ -53,17 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update book
         if (isset($_FILES['imagen']['name']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
 
-            $allowed = ['jpg','jpeg','png','webp'];
+            $allowed = ['jpg','jpeg','png'];
             $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
 
             if (!in_array($ext, $allowed)) {
                 $error = "Formato de imagen no permitido";
+
             } else {
                 $imageName = uniqid('book_', true) . '.' . $ext;
-                $pathImage = __DIR__ . '/../uploads/' . $imageName;
+                $pathImage = __DIR__ . '/../../uploads/' . $imageName;
 
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $pathImage)) {
                     $data['imagen'] = $imageName;
+                    
                 } else {
                     $error = "Error al subir la imagen";
                 }
@@ -96,43 +101,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="post" enctype="multipart/form-data">
 
             <label class="form-label">Título</label>
-            <input type="text"
-                name="titulo"
-                class="form-control mb-2"
-                value="<?= htmlspecialchars($book['titulo']) ?>">
-
-            <label class="form-label">Autor</label>
-            <input type="text"
-                name="autor"
-                class="form-control mb-2"
-                value="<?= htmlspecialchars($book['autor']) ?>">
-
-            <label class="form-label">Editorial</label>
-            <input type="text"
-                name="editorial"
-                class="form-control mb-2"
-                value="<?= htmlspecialchars($book['editorial']) ?>">
+            <input type="text" name="titulo" class="form-control mb-2" value="<?= htmlspecialchars($book['titulo']) ?>">
 
             <label class="form-label">ISBN</label>
-            <input type="text"
-                name="isbn"
-                class="form-control mb-2"
-                value="<?= htmlspecialchars($book['isbn']) ?>">
+            <input type="text" name="isbn" class="form-control mb-2" value="<?= htmlspecialchars($book['isbn']) ?>">
 
-            <label class="form-label">Stock</label>
-            <input type="number"
-                name="stock"
-                class="form-control mb-2"
-                min="0"
-                value="<?= (int)$book['stock'] ?>">
+            <label class="form-label">Autor</label>
+            <input type="text" name="autor" class="form-control mb-2" value="<?= htmlspecialchars($book['autor']) ?>">
+
+            <label class="form-label">Editorial</label>
+            <input type="text" name="editorial" class="form-control mb-2" value="<?= htmlspecialchars($book['editorial']) ?>">
 
             <label class="form-label">Descripción</label>
-            <textarea name="descripcion"
-                    class="form-control mb-3"><?= htmlspecialchars($book['descripcion']) ?></textarea>
+            <textarea name="descripcion" class="form-control mb-3"><?= htmlspecialchars($book['descripcion']) ?></textarea>
 
-            <button class="btn btn-primary">Guardar cambios</button>
-            <a href="books.php" class="btn btn-primary">Cancelar</a>
+            <label class="form-label">Stock</label>
+            <input type="number" name="stock" class="form-control mb-2" min="0" value="<?= (int)$book['stock'] ?>">
 
+            <label for="codCategoria">Categoría:</label>
+            <select name="codCategoria" class="form-select mb-3">
+                <option value="">Selecciona una categoría</option>
+                <?php foreach ($categorias as $cat): ?>
+                    <option value="<?= $cat['codigo'] ?>"
+                        <?= ($book['codCategoria'] == $cat['codigo']) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($cat['nombre']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <label for="imagen" class="mb-3 mt-3">Portada actual:</label>
+            <?php if ($book['imagen']): ?>
+                <div class="mb-2 text-center">
+                    <img src="<?= '../../uploads/' . htmlspecialchars($book['imagen']) ?>" alt="Portada" width="120">
+                </div>
+            <?php endif; ?>
+
+            <label for="imagen" class="mb-3 mt-3">Cambiar portada:</label>
+            <input type="file" name="imagen" class="form-control mb-3" accept="image/*">
+            
+            <div class="mt-5">
+                <button class="btn btn-primary">Guardar cambios</button>
+                <a href="books.php" class="btn btn-primary">Cancelar</a>
+            </div>
         </form>
     </div>
     <!-- Footer -->

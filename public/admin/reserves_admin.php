@@ -121,14 +121,9 @@ $reserves = $reservesModel->getAll(
 
         <!-- Search -->
         <form method="get" class="d-flex mb-5">
-            <input
-                type="text"
-                name="search"
-                class="form-control me-2"
-                placeholder="Buscar por usuario o recurso..."
-                value="<?= htmlspecialchars($search) ?>"
-            >
+            <input type="text" name="search" class="form-control me-2" placeholder="Buscar por usuario o código de reserva..." value="<?= htmlspecialchars($search) ?>">
             <button class="btn btn-primary">Buscar</button>
+            <a href="reserves_admin.php" class="btn btn-primary ms-2">Limpiar</a>
         </form>
 
         <!-- Table -->

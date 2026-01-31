@@ -97,12 +97,9 @@ $users = $userModel->getAllUsers(
 
         <!-- Search form -->
         <form method="get" class="d-flex mb-5">
-            <input type="text"
-                name="search"
-                class="form-control me-2"
-                placeholder="Buscar usuario..."
-                value="<?= htmlspecialchars($search) ?>">
+            <input type="text" name="search" class="form-control me-2" placeholder="Buscar usuario..." value="<?= htmlspecialchars($search) ?>">
             <button class="btn btn-primary">Buscar</button>
+            <a href="users.php" class="btn btn-primary ms-2">Limpiar</a>
         </form>
 
         <!-- Users -->

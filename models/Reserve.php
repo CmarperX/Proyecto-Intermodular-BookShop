@@ -1,5 +1,4 @@
 <?php 
-//
 
 // Reserve entity
 class Reserve {
@@ -76,17 +75,33 @@ class Reserve {
         return true;
     }
 
-    public function getUserReserves(string $dni) {
+    // get user reservations by DNI
+    public function getUserReserves(string $dni, string $search = '') {
 
-        $stmt = $this->pdo->prepare(
-            "SELECT r.*, l.titulo
-             FROM reservas r JOIN libros l 
-             ON l.codigo = r.codRecurso
-             WHERE r.codUsuario = ?
-             ORDER BY fecha DESC"
-        );
+        $sql = "SELECT r.*, l.titulo
+                FROM reservas r JOIN libros l 
+                ON l.codigo = r.codRecurso
+                WHERE r.codUsuario = :dni";
 
-        $stmt->execute([$dni]);
+        // Array of parameters
+        $params = [':dni' => $dni];
+
+        // if we type something into the search engine
+        if ($search !== '') {
+
+            // add filter to the SQL 
+            $sql .= " AND (r.codigo LIKE :search
+                        OR l.titulo LIKE :search)";
+
+            $params[':search'] = "%$search%";
+        }
+
+        $sql .= " ORDER BY fecha DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        // refund all reservations
         return $stmt->fetchAll();
     }
 
@@ -97,11 +112,14 @@ class Reserve {
             $sql = "SELECT COUNT(*) 
                     FROM reservas r JOIN usuarios u 
                     ON u.dni = r.codUsuario
-                    WHERE u.nombre LIKE ? 
-                        OR r.recurso LIKE ?";
+                    WHERE (
+                    r.codigo LIKE :search
+                    OR u.nombre LIKE :search
+                    OR r.codRecurso LIKE :search)";
 
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(["%$search%","%$search%"]);
+            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+            $stmt->execute();
 
         } else {
 
@@ -123,22 +141,28 @@ class Reserve {
 
         $order = ($order === 'ASC') ? 'ASC' : 'DESC';
 
-        if ($search) {
-            $sql = "SELECT r.*, u.nombre
+        if ($search !== '') {
+            $sql = "SELECT r.*, u.nombre, l.titulo
                     FROM reservas r JOIN usuarios u 
                     ON u.dni = r.codUsuario
-                    WHERE u.nombre LIKE :search
-                        OR r.recurso LIKE :search
+                    LEFT JOIN libros
+                    ON l.codigo = r.codRecurso
+                    WHERE (
+                        r.codigo LIKE :search
+                        OR u.nombre LIKE :search
+                        OR l.titulo LIKE :search
+                    )
                     ORDER BY r.fecha $order
                     LIMIT :limit OFFSET :offset";
 
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':search', '%$search%', PDO::PARAM_STR);
+            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
 
         } else {
-            $sql = "SELECT r.*, u.nombre
+            $sql = "SELECT r.*, u.nombre, l.titulo
                     FROM reservas r JOIN usuarios u 
                     ON u.dni = r.codUsuario
+                    LEFT JOIN libros l ON l.codigo = r.codRecurso
                     ORDER BY r.fecha $order
                     LIMIT :limit OFFSET :offset";
 
@@ -147,7 +171,6 @@ class Reserve {
 
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-
         $stmt->execute();
 
         return $stmt->fetchAll();
@@ -175,4 +198,28 @@ class Reserve {
         return $stmt->fetch();
     }
 
+    public function cancel(int $codigoReserva) {
+
+        $reserve = $this->getById($codigoReserva);
+
+        // only allow cancellation if it exists and is in confirmed status
+        if (!$reserve || $reserve['estado'] !== 'confirmada') {
+            return false;
+        }
+
+        // Update status and increase stock
+        $sql = "UPDATE reservas 
+                SET estado = 'cancelada' 
+                WHERE codigo = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$codigoReserva]);
+        
+        $sql = "UPDATE libros 
+                SET stock = stock + 1 
+                WHERE codigo = ?";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$reserve['codRecurso']]);
+
+    }
 }

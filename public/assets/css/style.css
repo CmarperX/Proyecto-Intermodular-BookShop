@@ -71,3 +71,7 @@ a:hover {
     font-weight: bold;
 }
 
+.navbar {
+  position: relative;
+  z-index: 9999;
+}

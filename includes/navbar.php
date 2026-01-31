@@ -65,7 +65,7 @@ if (Auth::isLoggedIn()) {
                         <?php endif; ?>
                         <li>
                             <a class="dropdown-item" href="<?= BASE_URL ?>/public/user/dashboard.php">
-                                Mi perfil
+                                Panel de usuario
                             </a>
                         </li>
                         <li>

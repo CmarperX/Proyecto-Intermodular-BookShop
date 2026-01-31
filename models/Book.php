@@ -27,8 +27,7 @@ class Book extends Resource {
         $order = ($order === 'DESC') ? 'DESC' : 'ASC';
 
         $sql = "SELECT * from libros
-                WHERE activo = 'activo'
-                AND titulo LIKE :search
+                WHERE titulo LIKE :search
                     or autor LIKE :search
                     or isbn LIKE :search
                 ORDER BY $column $order
@@ -36,7 +35,7 @@ class Book extends Resource {
         
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->bindValue(':search', "%$search%");
+        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
@@ -47,8 +46,7 @@ class Book extends Resource {
     // count the books according to the search
     public function count(string $search) {
         $sql = "SELECT COUNT(*) FROM libros
-                WHERE activo = 'activo'
-                AND titulo LIKE :search
+                WHERE titulo LIKE :search
                    OR autor LIKE :search
                    OR isbn LIKE :search";
 
@@ -62,8 +60,8 @@ class Book extends Resource {
     public function create(array $data) {
 
         $sql = "INSERT INTO libros
-                (titulo, isbn, autor, editorial, descripcion, stock, imagen)
-                VALUES(?, ?, ?, ?, ?, ?, ?)";
+                (titulo, isbn, autor, editorial, descripcion, stock, codCategoria, imagen)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -73,6 +71,7 @@ class Book extends Resource {
             $data['editorial'],
             $data['descripcion'],
             $data['stock'],
+            $data['codCategoria'],
             $data['imagen']
         ]);
     }
@@ -80,7 +79,7 @@ class Book extends Resource {
     // Update book
     public function update(int $codigo, array $data) {
         $sql = "UPDATE libros
-                SET titulo=?, isbn=?, autor=?, editorial=?, descripcion=?, stock=?, imagen=?
+                SET titulo=?, isbn=?, autor=?, editorial=?, descripcion=?, stock=?, codCategoria=?, imagen=?
                 WHERE codigo=?";
 
         $stmt = $this->pdo->prepare($sql);
@@ -91,6 +90,7 @@ class Book extends Resource {
             $data['editorial'],
             $data['descripcion'],
             $data['stock'],
+            $data['codCategoria'],
             $data['imagen'],
             $codigo
         ]);
@@ -112,6 +112,7 @@ class Book extends Resource {
                 WHERE l.activo = 'activo'";
 
         $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
@@ -129,6 +130,16 @@ class Book extends Resource {
         return $stmt->fetchAll();
     }
 
-    
+    // get all categories
+    public function getCategories() {
+
+        $sql = "SELECT codigo, nombre 
+                FROM categorias 
+                ORDER BY nombre ASC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+}
 }
 ?>

@@ -7,9 +7,12 @@ define('BASE_URL', '/');
 /* Link to the infinityFree domain */
 define('SITE_URL', '');
 
-/* API Stripe key´s */ 
-define('STRIPE_SECRET_KEY', '');
-define('STRIPE_PUBLIC_KEY', '');
+//PHPMailer
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'savianexus@gmail.com');
+define('SMTP_PASS', 'neaygokuqomfusbz');
+define('SMTP_SECURE', 'tls');
 
 // InfinityFree DB
 define('DB_HOST', '');
