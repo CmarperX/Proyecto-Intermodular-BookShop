@@ -44,7 +44,6 @@ if (!Auth::hasAnyRole(['admin', 'empleado'])) {
                         </div>
                     </a>
                 </div>
-
             <?php endif; ?>
 
             <!-- Category management -->
@@ -63,7 +62,7 @@ if (!Auth::hasAnyRole(['admin', 'empleado'])) {
                     </div>
                 </a>
             </div>
-
+            
             <!-- Books management -->
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="books.php" class="text-decoration-none">
@@ -99,6 +98,7 @@ if (!Auth::hasAnyRole(['admin', 'empleado'])) {
             </div>
 
             <!-- Statistics -->
+            <?php if (Auth::hasRole('admin')): ?>
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="statistics.php" class="text-decoration-none">
                     <div class="card h-100 shadow-sm text-center dashboard-card">
@@ -114,6 +114,7 @@ if (!Auth::hasAnyRole(['admin', 'empleado'])) {
                     </div>
                 </a>
             </div>
+            <?php endif; ?>
         </div>
     </div>
     <!-- Footer -->

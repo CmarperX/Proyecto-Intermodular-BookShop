@@ -108,8 +108,7 @@ if (Auth::isLoggedIn()) {
             <ul class="navbar-nav mx-lg-auto">
                 <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/public/index.php">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/public/books.php">Catálogo</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>about-us.php">Sobre nosotros</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>contact.php">Contacto</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/public/contact.php">Contacto</a></li>
             </ul>
         </div>
     </div>

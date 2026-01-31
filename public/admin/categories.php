@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../models/Category.php';
 
-if (!Auth::isLoggedIn() || !Auth::hasRole('admin')) {
+if (!Auth::isLoggedIn() || !Auth::hasAnyRole(['admin', 'empleado'])) {
     header('Location: ../index.php');
     exit;
 }
